@@ -1,0 +1,485 @@
+% 用 xelatex 编译
+\documentclass[12pt,a4paper,UTF8]{ctexart}
+% 基础宏包
+\usepackage{geometry} % 页面设置
+\usepackage{setspace} % 行距设置
+\usepackage{titlesec} % 标题格式
+\usepackage{titletoc} % 目录格式
+\usepackage{graphicx} % 插图
+\usepackage{float}    % 浮动体, 设置图片位置
+\usepackage{booktabs} % 表格美化
+\usepackage{amsmath,amssymb} % 公式
+\usepackage{fancyhdr} % 页眉页脚
+\usepackage{enumerate} % 列表
+\usepackage{footnote} % 脚注
+\usepackage{lastpage} % 最后一页页码
+\usepackage{fontspec} % 英文字体设置
+\usepackage{amsthm,thmtools,thmbox} % 数学定理
+
+% tikz 作画相关宏包
+\usepackage{tikz} % tikz 作图
+\usepackage{pgf} % tikz 中使用公式作画
+\usepackage{tikz-cd} % tikz 绘制交换图的宏包
+
+% 基于毕业论文要求的一些特殊设定宏包
+\usepackage{gbt7714} % GBT-7714 引用标准
+\bibliographystyle{gbt7714-numerical} % 按数字来索引
+\usepackage{pdfpages} % 插入PDF文件
+\usepackage{indentfirst} % 强制首行缩进
+
+\usepackage{hyperref} % 超链接（最后加载避免冲突）
+
+% 页面设置：左3.17cm，右3.17cm，上2.54cm，下2.54cm，页眉1.5cm，页脚1.75cm
+\geometry{left=3.17cm,right=3.17cm,top=2.54cm,bottom=2.54cm,headheight=1.5cm,footskip=1.75cm}
+
+% 字体设置：通过ctex自带命令设置，避免fontspec冲突
+\setCJKmainfont{SimSun}       % 中文主字体(宋体)
+\setCJKsansfont{Microsoft YaHei} % 中文无衬线字体
+\setmainfont{Times New Roman} % 英文主字体
+
+% 全局段落与行距配置（核心修复：先设置缩进，再设置行距，保证优先级）
+\setlength{\parindent}{2em}        % 全局首行缩进2字符（优先设置）
+\setlength{\parskip}{0pt}          % 段间距0
+\doublespacing
+
+% 页码设置：前期罗马数字，正文阿拉伯数字，底端居中，小五号
+\pagestyle{plain}
+\fancyhf{}
+\cfoot{\thepage}
+\renewcommand{\footrulewidth}{0pt}
+\renewcommand{\thepage}{\roman{page}} % 初始罗马数字
+
+% 标题格式修复：移除不兼容的shape参数，改用titlesec通用写法
+% 一级标题：黑体三号，居中，单倍行距
+\titleformat{\section}
+  {\bfseries\Large\heiti\centering}{\thesection}{0.5em}{}
+\titlespacing*{\section}{0pt}{12pt}{6pt}
+
+% 二级标题：黑体小三号，左对齐，单倍行距
+\titleformat{\subsection}
+  {\bfseries\large\heiti}{\thesubsection}{0.5em}{}
+\titlespacing*{\subsection}{0pt}{12pt}{6pt}
+
+% 三级标题：黑体四号，左缩进0.85cm，单倍行距
+\titleformat{\subsubsection}
+  {\bfseries\normalsize\heiti}{\thesubsubsection}{0.5em}{}
+\titlespacing*{\subsubsection}{0.85cm}{12pt}{6pt}
+
+% 目录格式
+\titlecontents{section}[0em]{\CJKfamily{sun}}{\normalfont\thecontentslabel\quad}{}{\titlerule*[6pt]{.}\contentspage}
+\titlecontents{subsection}[1em]{\CJKfamily{sun}}{\normalfont\thecontentslabel\quad}{}{\titlerule*[6pt]{.}\contentspage}
+\titlecontents{subsubsection}[2em]{\CJKfamily{sun}}{\normalfont\thecontentslabel\quad}{}{\titlerule*[6pt]{.}\contentspage}
+
+% 图表公式编号：连续编号
+\renewcommand{\thefigure}{\arabic{figure}} % 图阿拉伯数字连续编号
+\renewcommand{\thetable}{\arabic{table}}   % 表阿拉伯数字连续编号
+\renewcommand{\theequation}{\arabic{equation}} % 公式阿拉伯数字连续编号
+
+% 引用时区分上标和普通大小
+\let\oldcite\cite % 保存老cite
+\renewcommand{\cite}[1]{%
+  \citestyle{numbers}% 每次引用前执行该指令，调整为正常大小
+  \oldcite{#1}% 调用原有\cite功能，传递参数#1
+}
+\newcommand{\upcite}[1]{%
+  \citestyle{super}% 每次引用前执行该指令，调整为上标
+  \oldcite{#1}% 调用原有\cite功能，传递参数#1
+}
+
+% 参考文献格式：仿宋体五号，1.5倍行距，悬挂缩进
+\newcommand{\refstyle}{\CJKfamily{fangsong}\small\onehalfspacing\setlength{\parindent}{0em}\setlength{\hangindent}{0.74cm}}
+
+% 附录格式：仿宋体五号，1.5倍行距，首行缩进2字符
+\newcommand{\appendixstyle}{\CJKfamily{fangsong}\small\onehalfspacing\setlength{\parindent}{2em}}
+
+% 自定义样式
+
+\let\example\undefined % 宏包自带了例子环境, 我们首先需要将其无效化, 才能使用我们的环境
+\let\endexample\undefined
+
+\declaretheoremstyle[
+  name=\hspace{2em}% 参考部分研究生毕业论文, 定理/定义等环境前加入首行缩进 \hspace{2em}, 可去除
+  定理, 
+  bodyfont=\normalfont,
+  headfont=\bfseries\heiti,
+  postheadspace=0.5em,
+  spaceabove=0pt,
+  spacebelow=0pt,
+  within=section % 按节划分序号
+]{thmsty}
+\declaretheorem[style=thmsty]{theorem}
+
+% 定理环境优化
+\declaretheoremstyle[
+  name=\hspace{2em}% 参考部分研究生毕业论文, 定理/定义等环境前加入首行缩进 \hspace{2em}, 可去除
+  引理,
+  bodyfont=\normalfont,
+  headfont=\bfseries\heiti,
+  postheadspace=0.5em,
+  spaceabove=0pt,    % 取消定理上方额外间距，继承段落间距
+  spacebelow=0pt,    % 取消定理下方额外间距
+  %headpunct={：},    % 标题后加中文冒号（可选，适配中文排版）
+  within=section       % 按章节编号（如1.1 引理1），可选
+]{lemsty}
+\declaretheorem[style=lemsty,sibling=theorem]{lemma}
+
+\declaretheoremstyle[
+  name=\hspace{2em}% 参考部分研究生毕业论文, 定理/定义等环境前加入首行缩进 \hspace{2em}, 可去除
+  例, % 可以考虑是选择 例 还是 例子
+  bodyfont=\normalfont,
+  headfont=\bfseries\heiti,
+  postheadspace=0.5em,
+  spaceabove=0pt,
+  spacebelow=0pt,
+  within=section
+]{exsty}
+\declaretheorem[style=exsty,sibling=theorem]{example}
+
+\declaretheoremstyle[
+  name=\hspace{2em}% 参考部分研究生毕业论文, 定理/定义等环境前加入首行缩进 \hspace{2em}, 可去除
+  定义,
+  bodyfont=\normalfont,
+  headfont=\bfseries\heiti,
+  postheadspace=0.5em,
+  spaceabove=0pt,
+  spacebelow=0pt,
+  within=section
+]{defsty}
+\declaretheorem[style=defsty,sibling=theorem]{definition}
+
+\declaretheoremstyle[
+  name=\hspace{2em}% 参考部分研究生毕业论文, 定理/定义等环境前加入首行缩进 \hspace{2em}, 可去除
+  注记,
+  bodyfont=\normalfont,
+  headfont=\bfseries\heiti,
+  postheadspace=0.5em,
+  spaceabove=0pt,
+  spacebelow=0pt,
+  within=section
+]{rmksty}
+\declaretheorem[style=rmksty,sibling=theorem]{remark}
+
+\makeatletter
+\renewenvironment{proof}[1][\proofname]{% 保留可选参数（默认“证明”）
+  \par
+  \pushQED{\qed}% 保留证明结尾的QED符号
+  \topsep6\p@\@plus6\p@\relax  % 原生上下间距
+  \trivlist
+  \item[\hskip\labelsep\hspace{2em}\bfseries\heiti #1]\ignorespaces  % 关键：添加\hspace{2em}
+}{%
+  \popQED\endtrivlist\@endpefalse
+}
+\makeatother
+
+% 在这里定义你自己的符号, 适用那些用 \mathrm{} 的符号
+\DeclareMathOperator{\Spec}{Spec}
+
+
+
+\begin{document}
+\pagestyle{empty} % 封面、诚信声明无页码
+
+% ===================== 封面 =====================
+% 插入封面的 PDF 文件, 记得先用 word 修改之后导出为 PDF 文件并放在目录下面
+\includepdf[pages=-, scale=1]{本科毕业论文封面 - 已改.pdf} 
+
+\newpage
+
+% ===================== 诚信声明 =====================
+% 插入诚信声明的 PDF 文件, 记得先用 word 修改之后导出为 PDF 文件并放在目录下面
+\includepdf[pages=-, scale=1]{本科毕业论文诚信声明 - 已改.pdf}
+\newpage
+
+% ===================== 中文摘要与关键词 =====================
+\begin{center}
+\textbf{\Large\heiti 摘要}
+\end{center}
+% 修复：先设置固定行距，再恢复首行缩进（用\par保证段落生效）
+\singlespacing
+\setlength{\baselineskip}{20pt} % 固定值20磅
+\CJKfamily{sun}\normalsize % 确保宋体生效
+% 摘要正文（首行缩进2字符）
+\hspace{2em}本文以XX为研究对象，采用XX研究方法，探讨了XX问题，分析了XX原因，得出了XX结论，为XX提供了参考依据。\par
+\vspace{1em}
+\noindent\textbf{\heiti 关键词：}
+\CJKfamily{sun}\normalsize 代数几何; 微分几何; 算术几何
+
+\quad 
+
+
+% 如果中文摘要和英文摘要内容不多, 可以在一面呈现, 就将下面的 \newpage 前加上 % 
+\newpage
+
+% ===================== 英文摘要与关键词 =====================
+\begin{center}
+\textbf{\Large Abstract}
+\end{center}
+\singlespacing
+\setlength{\baselineskip}{20pt} % 固定值20磅
+\normalsize
+\hspace{2em}This thesis takes XX as the research object, adopts XX research methods, discusses XX issues, analyzes XX causes, draws XX conclusions, and provides a reference for XX.\par
+\vspace{1em}
+\noindent\textbf{Keywords:} Algebraic geometry; differential geometry; arithmetic geometry
+\vspace{2em}
+\newpage
+
+% ===================== 目录 =====================
+
+\singlespacing
+\setlength{\baselineskip}{20pt} % 固定值20磅
+
+\vspace{1em}
+\tableofcontents
+\vspace{2em}
+\newpage
+
+% 正文开始，页码改为阿拉伯数字
+\pagestyle{plain}  % 启用基础页码样式（页码在页脚居中）
+\renewcommand{\thepage}{\arabic{page}}
+\setcounter{page}{1}
+
+\singlespacing
+\setlength{\baselineskip}{20pt} % 固定值20磅
+
+% ===================== 正文 =====================
+% 导言（文科用绪论）
+% 第一章 绪论
+\section{导言}
+\subsection{研究背景与意义}
+
+在这里你可以写一下自己的研究内容相关的东西
+
+\subsection{国内外研究现状}
+
+在这里我们就要大量引用文献了, 本模板仿照中文 word 论文模板标准, 采用两种引用形式. 
+
+\begin{itemize}
+  \item 第一种, 当这篇文献直接当主语或者宾语时, 直接用正体形式. 例如: 
+  实际上, 模空间最早的研究起源于黎曼在 1857 年关于 Abel 函数的论文 \cite{Riemann1857}, 
+  他在这篇文章中提出了黎曼曲面的定义, 并通过研究亏格为 $g$ 的曲线所构成的空间提出了 
+  "参数" 空间的想法. 中文早期对 "moduli space" 的翻译 "参模空间" 就是源自于模空间
+  中参数化的思想. 
+
+  \item 第二种, 当我们引用这篇文献的内容需要指出该内容的出处时, 采用上标形式. 例如: 
+  在埃尔朗根纲领的指导下, 几何的研究已经与几何对象的变换群的研究脱不开关系了. 
+  因此经典不变量理论在 19 世纪有相当多的发展, 其中希尔伯特经典的 23 个问题中的第 14 个, 
+  即有限生成的 $k$-代数在代数群作用下的不变环是否是有限生成的, 就是围绕这一问题展开. 
+  很遗憾, 希尔伯特的猜想最终被证明是错误的 \upcite{Nagata1959}. 
+\end{itemize}
+
+
+\subsection{研究内容}
+
+这里讲讲你的论文里干了什么
+
+% 第二章 预备知识
+
+\section{预备知识}
+
+
+
+\subsection{范畴论基础}
+
+\subsubsection{米田引理与可表函子}
+
+先回顾一下函子的概念, 以及代数几何中无处不在的函子性, 最后点出一般的预层
+的反变函子定义 (与后面的无法构建模空间的反例对应)
+
+首先讲一下米田引理的哲学
+
+\begin{definition}[可表函子]
+  设 $\mathcal{C}$ 为一个范畴, $X \in \mathcal{C}$ 为一个固定的对象, 
+  点函子 $h_X : \mathcal{C} \to \mathrm{Set}$ 作为一个反变函子的信息由下面给出. 
+  对任意对象 $Y \in \mathcal{C}$, 令 $h_X(Y)=\operatorname{Hom}(Y,X)$; 
+  设 $f:Y \to Z$ 为一个态射, 则拉回 $f^*=h_X(f):[\alpha:Z \to X] \mapsto \alpha \circ f$. 
+
+  我们称一个反变函子 $F : \mathcal{C} \to \mathrm{Set}$ 被 $X$ 所表示, 如果 
+  $F$ 与 $h_X$ 自然同构. 一个可表函子就是可以被某个对象 $X$ 所表示的反变函子. 
+\end{definition}
+
+我们的主要中文资料来源是 \cite{EGAChinese1} 和 \cite{Lai2006} 而 \cite{milneAV} 
+也是很好的资料. 
+
+这里我们用一个映射图来表示局部万有性质. 这个图使用 Tikz 绘制. 
+Tikz 绘图虽然麻烦, 但是相对其他软件要美观很多, 这里推荐一个我所使用的可视化 Tikz 
+的网站 \url{https://8gwifi.org/tikz-draw.jsp}. 
+
+\begin{figure}[htbp]
+\centering
+ \begin{tikzpicture}[scale=0.8]
+  % Coordinates
+  \coordinate (A) at (-1.00, 5.99);
+  \coordinate (B) at (-0.11, 7.94);
+  \coordinate (C) at (-0.75, 7.24);
+  \coordinate (D) at (-0.50, 7.49);
+  \coordinate (E) at (3.00, 8.00);
+  \coordinate (F) at (1.25, 8.25);
+  \coordinate (G) at (1.50, 8.25);
+  \coordinate (H) at (2.00, 6.50);
+  \coordinate (I) at (0.25, 6.75);
+  \coordinate (J) at (0.75, 6.75);
+  \coordinate (K) at (2.00, 7.00);
+  \coordinate (L) at (2.25, 7.50);
+  \coordinate (M) at (4.98, 5.14);
+  \coordinate (N) at (5.51, 7.44);
+  \coordinate (O) at (4.75, 6.25);
+  \coordinate (P) at (5.00, 7.00);
+  \coordinate (Q) at (9.00, 7.46);
+  \coordinate (R) at (6.75, 8.00);
+  \coordinate (S) at (7.81, 8.02);
+  \coordinate (T) at (9.19, 5.47);
+  \coordinate (U) at (6.25, 5.75);
+  \coordinate (V) at (7.50, 6.50);
+  \coordinate (W) at (8.75, 6.75);
+  \coordinate (X) at (8.96, 7.33);
+  \coordinate (Y) at (-1.49, 2.46);
+  \coordinate (Z) at (-0.58, 4.39);
+  \coordinate (AA) at (-1.06, 3.55);
+  \coordinate (AB) at (2.94, 4.02);
+  \coordinate (AC) at (0.69, 4.55);
+  \coordinate (AD) at (1.75, 4.57);
+  \coordinate (AE) at (3.44, 1.95);
+  \coordinate (AF) at (0.19, 2.30);
+  \coordinate (AG) at (1.25, 3.00);
+  \coordinate (AH) at (3.25, 3.50);
+  \coordinate (AI) at (3.18, 3.19);
+  \coordinate (AJ) at (-1.31, 2.80);
+  \coordinate (AK) at (5.91, 6.28);
+  \coordinate (AL) at (7.41, 6.78);
+  \coordinate (AM) at (5.56, 6.65);
+  \coordinate (AN) at (7.06, 7.40);
+  \coordinate (AO) at (6.31, 5.90);
+  \coordinate (AP) at (7.56, 6.15);
+  \coordinate (AQ) at (6.75, 6.50);
+  \coordinate (AR) at (1.00, 7.25);
+  \coordinate (AS) at (1.00, 3.50);
+  \coordinate (AT) at (9.00, 3.50);
+  \coordinate (AU) at (6.94, 6.45);
+
+  % Drawing
+  \draw[thick] (A) .. controls (-0.75, 7.24) and (-0.50, 7.49) .. (B);
+  \draw[thick] (B) .. controls (1.25, 8.25) and (1.50, 8.25) .. (E);
+  \draw[thick] (A) .. controls (0.25, 6.75) and (0.75, 6.75) .. (H);
+  \draw[thick] (H) .. controls (2.00, 7.00) and (2.25, 7.50) .. (E);
+  \draw[thick] (M) .. controls (4.75, 6.25) and (5.00, 7.00) .. (N);
+  \draw[thick] (N) .. controls (6.75, 8.00) and (7.81, 8.02) .. (Q);
+  \draw[thick] (M) .. controls (6.25, 5.75) and (7.50, 6.50) .. (T);
+  \draw[thick] (T) .. controls (8.75, 6.75) and (8.96, 7.33) .. (Q);
+  \draw[thick] (Y) .. controls (-1.31, 2.80) and (-1.06, 3.55) .. (Z);
+  \draw[thick] (Z) .. controls (0.69, 4.55) and (1.75, 4.57) .. (AB);
+  \draw[thick] (Y) .. controls (0.19, 2.30) and (1.25, 3.00) .. (AE);
+  \draw[thick] (AE) .. controls (3.25, 3.50) and (3.18, 3.19) .. (AB);
+  \draw[loosely dashed,thick] (AK) .. controls (5.56, 6.65) and (7.06, 7.40) .. (AL);
+  \draw[loosely dashed,thick] (AK) .. controls (6.31, 5.90) and (7.56, 6.15) .. (AL);
+  \draw[-Stealth, dashed,thick] (AQ) -- node[above, text=black, midway] {$h$} (AR);
+  \draw[-Stealth,thick] (AR) -- node[left, text=black, midway] {$f$} (AS);
+  \draw[-Stealth,thick] (AQ) -- node[below right, text=black, midway] {$g$} (AS);
+  \draw[-Stealth,thick] (AT) -- node[above right, text=black, midway] {$t$} (AU);
+  \fill[black] (AT) circle (2pt);
+  \fill[black] (AU) circle (2pt);
+  \node[below right, black] at (B) {$S$};
+  \node[below right, black] at (N) {$T$};
+  \node[below right, black] at (Z) {$M$};
+  \node[above right, black] at (AQ) {$U$};
+  \fill[black] (AT) circle (2pt);
+  \node[above right, black] at (AT) {$\Spec k$};
+\end{tikzpicture}
+\caption{局部万有性质}
+\end{figure}
+
+
+\subsection{代数群及其作用}
+
+\begin{definition}[代数群作用]
+  定义和定理等环境都可以输入标题. 在这个定义下面我们会插入并排的交换图.
+  \upcite{EGAChinese1} 
+\end{definition}
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[t]{0.45\textwidth}
+    \centering
+    \begin{tikzcd}
+        \operatorname{Spec} k \times X 
+        \arrow[r,"e \times \operatorname{id}_X"] 
+        \arrow[dr,"\cong"'] 
+        & G \times X 
+        \arrow[d,"\sigma"] \\
+        & X 
+    \end{tikzcd}
+    \caption{群作用的单位律}
+  \end{minipage}
+  \hspace{0.05\textwidth}  % 两张图之间留5%页面宽度的间距
+  \begin{minipage}[t]{0.45\textwidth}
+    \centering
+    \begin{tikzcd}
+        G \times G \times X 
+        \arrow[r,"\operatorname{id}_G \times \sigma"] 
+        \arrow[d,"m_G \times \operatorname{id}_X"'] 
+        & G \times X \arrow[d,"\sigma"] \\
+        G \times X \arrow[r,"\sigma"'] & X. 
+    \end{tikzcd}
+    \caption{群作用的结合律}
+  \end{minipage}
+\end{figure}
+
+公式的输入和一般的一样. 
+
+\begin{equation}
+  \label{Eq1}
+  \begin{aligned} 
+    \varphi_{*}(f \cdot g)
+    &= \varphi_{*}(m \circ (f \times g))\\
+    &=  \varphi \circ m \circ (f\times g)\\
+    &= m \circ (\varphi\times \varphi) \circ (f \times g)\\
+    &= m \circ (\varphi f \times \varphi g)\\ 
+    &= \varphi f \cdot \varphi g \\ 
+    &= \varphi_{*}(f) \cdot \varphi_{*}(g).  
+  \end{aligned}
+\end{equation}
+
+一般来说对公式的引用可以使用 \eqref{Eq1} 自动加上括号. 
+
+\subsubsection{普通地插入图片}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.6\textwidth]{Peggy.jpg}
+  \caption{巴猪猪来啦}
+  \label{Fig1}
+\end{figure}
+
+我们也可以自动地引用图片, 图 \ref{Fig1}
+
+\section{这里应该是你的第三章, 该开始推导了}
+
+\begin{theorem}
+  \label{Thm1} % 这里进行一个标注以引用, 如果不引用可以不用标注. 
+  你会在这里列出你的主要定理. 
+\end{theorem}
+
+\begin{proof}
+  然后在这里证明它. 
+\end{proof}
+
+一般来说定理的引用可以使用 \autoref{Thm1} 会自动加上环境的名称, 
+但是由于我们为了方便定理的首行缩进, 直接采用了在定理前面加上空格这个操作, 
+因此我们还是建议您自己手写, 定理\ref{Thm1}
+
+如果你觉得定理环境你不喜欢, 比如说我在这里为了符合学校的要求, 
+采取了统一字体和统一行间距的做法, 这其实大大牺牲了论文排版的美感, 
+对此你可以回到 declaretheoremstyle 那里进行修改. 
+
+
+
+
+\newpage
+% ===================== 参考文献 =====================
+\refstyle
+
+\bibliography{reference.bib}
+
+\newpage
+
+
+\end{document}
