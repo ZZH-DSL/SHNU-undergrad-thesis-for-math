@@ -1,4 +1,4 @@
-% 用 xelatex 编译
+% 用 xelatex 编译, 推荐配方 xe->bib->xe->xe
 \documentclass[12pt,a4paper,UTF8]{ctexart}
 % 基础宏包
 \usepackage{geometry} % 页面设置
@@ -8,9 +8,9 @@
 \usepackage{graphicx} % 插图
 \usepackage{float}    % 浮动体, 设置图片位置
 \usepackage{booktabs} % 表格美化
-\usepackage{amsmath,amssymb} % 公式
+\usepackage{amsmath,amssymb,mathrsfs} % 公式
 \usepackage{fancyhdr} % 页眉页脚
-\usepackage{enumerate} % 列表
+\usepackage{enumitem} % 列表
 \usepackage{footnote} % 脚注
 \usepackage{lastpage} % 最后一页页码
 \usepackage{fontspec} % 英文字体设置
@@ -20,6 +20,7 @@
 \usepackage{tikz} % tikz 作图
 \usepackage{pgf} % tikz 中使用公式作画
 \usepackage{tikz-cd} % tikz 绘制交换图的宏包
+\usepackage{caption} % 标题
 
 % 基于毕业论文要求的一些特殊设定宏包
 \usepackage{gbt7714} % GBT-7714 引用标准
@@ -27,10 +28,21 @@
 \usepackage{pdfpages} % 插入PDF文件
 \usepackage{indentfirst} % 强制首行缩进
 
+% 批注
+\usepackage[markup=default,draft]{changes} % 批注, draft 表示显示批注, 换成 final 隐藏批注
+
+% 超链接
 \usepackage{hyperref} % 超链接（最后加载避免冲突）
 
 % 页面设置：左3.17cm，右3.17cm，上2.54cm，下2.54cm，页眉1.5cm，页脚1.75cm
-\geometry{left=3.17cm,right=3.17cm,top=2.54cm,bottom=2.54cm,headheight=1.5cm,footskip=1.75cm}
+\geometry{
+  left=3.17cm,
+  right=3.17cm,
+  top=2.54cm,
+  bottom=2.54cm,
+  headheight=1.5cm,
+  footskip=1.75cm
+  }
 
 % 字体设置：通过ctex自带命令设置，避免fontspec冲突
 \setCJKmainfont{SimSun}       % 中文主字体(宋体)
@@ -49,7 +61,6 @@
 \renewcommand{\footrulewidth}{0pt}
 \renewcommand{\thepage}{\roman{page}} % 初始罗马数字
 
-% 标题格式修复：移除不兼容的shape参数，改用titlesec通用写法
 % 一级标题：黑体三号，居中，单倍行距
 \titleformat{\section}
   {\bfseries\Large\heiti\centering}{\thesection}{0.5em}{}
@@ -65,7 +76,7 @@
   {\bfseries\normalsize\heiti}{\thesubsubsection}{0.5em}{}
 \titlespacing*{\subsubsection}{0.85cm}{12pt}{6pt}
 
-% 目录格式
+% 目录格式与 word 模板相匹配, 调整了缩进量和取消 section 标题的加粗 
 \titlecontents{section}[0em]{\CJKfamily{sun}}{\normalfont\thecontentslabel\quad}{}{\titlerule*[6pt]{.}\contentspage}
 \titlecontents{subsection}[1em]{\CJKfamily{sun}}{\normalfont\thecontentslabel\quad}{}{\titlerule*[6pt]{.}\contentspage}
 \titlecontents{subsubsection}[2em]{\CJKfamily{sun}}{\normalfont\thecontentslabel\quad}{}{\titlerule*[6pt]{.}\contentspage}
@@ -81,6 +92,7 @@
   \citestyle{numbers}% 每次引用前执行该指令，调整为正常大小
   \oldcite{#1}% 调用原有\cite功能，传递参数#1
 }
+% 设置新命令 \upcite{}
 \newcommand{\upcite}[1]{%
   \citestyle{super}% 每次引用前执行该指令，调整为上标
   \oldcite{#1}% 调用原有\cite功能，传递参数#1
@@ -103,73 +115,109 @@
   bodyfont=\normalfont,
   headfont=\bfseries\heiti,
   postheadspace=0.5em,
-  spaceabove=0pt,
-  spacebelow=0pt,
-  within=section % 按节划分序号
+  spaceabove=1.5pt,
+  spacebelow=1.5pt,
+  %headpunct={: },    % 标题后加中文冒号 (可选, 适配中文排版) 
+  within=section % 按章节划分序号
 ]{thmsty}
 \declaretheorem[style=thmsty]{theorem}
 
-% 定理环境优化
+% 其他环境的设置
 \declaretheoremstyle[
   name=\hspace{2em}% 参考部分研究生毕业论文, 定理/定义等环境前加入首行缩进 \hspace{2em}, 可去除
   引理,
   bodyfont=\normalfont,
   headfont=\bfseries\heiti,
   postheadspace=0.5em,
-  spaceabove=0pt,    % 取消定理上方额外间距，继承段落间距
-  spacebelow=0pt,    % 取消定理下方额外间距
-  %headpunct={：},    % 标题后加中文冒号（可选，适配中文排版）
-  within=section       % 按章节编号（如1.1 引理1），可选
+  spaceabove=1.5pt,
+  spacebelow=1.5pt,    % 取消定理下方额外间距
+  %headpunct={: },    % 标题后加中文冒号 (可选, 适配中文排版) 
+  within=section       % 按章节编号 (如1.1 引理1) , 可选
 ]{lemsty}
-\declaretheorem[style=lemsty,sibling=theorem]{lemma}
+\declaretheorem[style=lemsty,sibling=theorem]{lemma} % 沿用定理环境的编号
 
 \declaretheoremstyle[
   name=\hspace{2em}% 参考部分研究生毕业论文, 定理/定义等环境前加入首行缩进 \hspace{2em}, 可去除
   例, % 可以考虑是选择 例 还是 例子
   bodyfont=\normalfont,
   headfont=\bfseries\heiti,
+    spaceabove=1.5pt,
+  spacebelow=1.5pt,
   postheadspace=0.5em,
-  spaceabove=0pt,
-  spacebelow=0pt,
   within=section
 ]{exsty}
-\declaretheorem[style=exsty,sibling=theorem]{example}
+\declaretheorem[style=exsty,sibling=theorem]{example} % 统一编号顺序
 
 \declaretheoremstyle[
   name=\hspace{2em}% 参考部分研究生毕业论文, 定理/定义等环境前加入首行缩进 \hspace{2em}, 可去除
   定义,
   bodyfont=\normalfont,
   headfont=\bfseries\heiti,
+    spaceabove=1.5pt,
+  spacebelow=1.5pt,
   postheadspace=0.5em,
-  spaceabove=0pt,
-  spacebelow=0pt,
   within=section
 ]{defsty}
-\declaretheorem[style=defsty,sibling=theorem]{definition}
+\declaretheorem[style=defsty,sibling=theorem]{definition} % 统一编号顺序
 
 \declaretheoremstyle[
   name=\hspace{2em}% 参考部分研究生毕业论文, 定理/定义等环境前加入首行缩进 \hspace{2em}, 可去除
   注记,
   bodyfont=\normalfont,
   headfont=\bfseries\heiti,
+    spaceabove=1.5pt,
+  spacebelow=1.5pt,
   postheadspace=0.5em,
-  spaceabove=0pt,
-  spacebelow=0pt,
   within=section
 ]{rmksty}
-\declaretheorem[style=rmksty,sibling=theorem]{remark}
+\declaretheorem[style=rmksty,sibling=theorem]{remark} % 统一编号顺序
 
+\declaretheoremstyle[
+  name=\hspace{2em}% 参考部分研究生毕业论文, 定理/定义等环境前加入首行缩进 \hspace{2em}, 可去除
+  推论,
+  bodyfont=\normalfont,
+  headfont=\bfseries\heiti,
+    spaceabove=1.5pt,
+  spacebelow=1.5pt,
+  postheadspace=0.5em,
+  within=section
+]{corsty}
+\declaretheorem[style=corsty,sibling=theorem]{corollary} % 统一编号顺序
+
+\declaretheoremstyle[
+  name=\hspace{2em}% 参考部分研究生毕业论文, 定理/定义等环境前加入首行缩进 \hspace{2em}, 可去除
+  命题,
+  bodyfont=\normalfont,
+  headfont=\bfseries\heiti,
+    spaceabove=1.5pt,
+  spacebelow=1.5pt,
+  postheadspace=0.5em,
+  within=section
+]{propsty}
+\declaretheorem[style=propsty,sibling=theorem]{proposition} % 统一编号顺序
+
+% 证明环境
 \makeatletter
 \renewenvironment{proof}[1][\proofname]{% 保留可选参数（默认“证明”）
   \par
   \pushQED{\qed}% 保留证明结尾的QED符号
   \topsep6\p@\@plus6\p@\relax  % 原生上下间距
   \trivlist
-  \item[\hskip\labelsep\hspace{2em}\bfseries\heiti #1]\ignorespaces  % 关键：添加\hspace{2em}
+  \item[\hskip\labelsep\hspace{2em}\bfseries\heiti #1]\ignorespaces  % 缩进 2 字符
 }{%
   \popQED\endtrivlist\@endpefalse
 }
 \makeatother
+
+% 列表设置
+\setlist{
+  itemsep=0pt,         % 列表项之间的间距
+  parsep=0pt,          % 段落之间的间距
+  topsep=0.5ex,        % 列表与上下文距离（可微调）
+  partopsep=0pt,
+  leftmargin=*,        % 保持正常缩进
+  align=left,
+}
 
 % 在这里定义你自己的符号, 适用那些用 \mathrm{} 的符号
 \DeclareMathOperator{\Spec}{Spec}
@@ -199,7 +247,8 @@
 \setlength{\baselineskip}{20pt} % 固定值20磅
 \CJKfamily{sun}\normalsize % 确保宋体生效
 % 摘要正文（首行缩进2字符）
-\hspace{2em}本文以XX为研究对象，采用XX研究方法，探讨了XX问题，分析了XX原因，得出了XX结论，为XX提供了参考依据。\par
+\hspace{2em}
+本文以XX为研究对象，采用XX研究方法，探讨了XX问题，分析了XX原因，得出了XX结论，为XX提供了参考依据。\par
 \vspace{1em}
 \noindent\textbf{\heiti 关键词：}
 \CJKfamily{sun}\normalsize 代数几何; 微分几何; 算术几何
@@ -217,7 +266,9 @@
 \singlespacing
 \setlength{\baselineskip}{20pt} % 固定值20磅
 \normalsize
-\hspace{2em}This thesis takes XX as the research object, adopts XX research methods, discusses XX issues, analyzes XX causes, draws XX conclusions, and provides a reference for XX.\par
+% 摘要正文（首行缩进2字符）
+\hspace{2em}
+This thesis takes XX as the research object, adopts XX research methods, discusses XX issues, analyzes XX causes, draws XX conclusions, and provides a reference for XX.\par
 \vspace{1em}
 \noindent\textbf{Keywords:} Algebraic geometry; differential geometry; arithmetic geometry
 \vspace{2em}
@@ -242,12 +293,107 @@
 \setlength{\baselineskip}{20pt} % 固定值20磅
 
 % ===================== 正文 =====================
-% 导言（文科用绪论）
-% 第一章 绪论
+% 1 导言
 \section{导言}
+
+数学论文, 特别是基础数学的论文, 一般的编排顺序是导言、预备知识, 
+接着再是正文内容. 为了让模板更加好用, 我们在导言部分和预备知识部分
+只展示大致的编排样式, 进入正文部分再展开详细的教学. 
+
 \subsection{研究背景与意义}
 
-在这里你可以写一下自己的研究内容相关的东西
+数学相关论文的研究背景与意义通常是比较好写的, 可以参考国内外论文和专著的导言
+部分, 一般前沿的文章在这一部分都写得相当出色, 能够让大部分读者一下子抓住要点. 
+不过论文和专著的特性也决定了它们所需的知识储备往往远远超出本科生能力范围, 
+因此一些受众更加广泛门槛更加低的文章会是更适合本科生的学习资源. 
+在此我推荐一部分可以找到这类文章的期刊/平台: 
+\begin{itemize} % 使用 itemize 环境来表示无序号的条目
+  \item \href{https://www.ams.org/notices}{\textbf{Notices of the American Mathematical Society}}: 
+  \begin{itemize}[label = $ \circ $] % 这里使用了 enumitem 宏包中的功能, 可以自定义 item 的标志
+    \item 这本期刊并非传统的原创研究期刊, 而更像是一本面向全球专业数学家的综合性新闻杂志, 
+    里面的文章往往用较少的篇幅深入浅出地讲解一些数学方向的前沿发展. 
+
+    \item 在这本期刊上, 数学工作者们会向研究生和其他数学工作者解释自己在做什么工作, 
+    例如许晨阳介绍 $ K $-稳定性进展的文章 \cite{Xu2022} 
+    和王艺霖介绍她所研究的随机几何相关的文章 \cite{Wang2024}; 
+    许多文章也会从一些有趣又不至于晦涩的内容出发, 来介绍前沿的理论, 
+    例如陶哲轩的 \cite{Tao2001} 从挂谷猜想出发来讨论分析和组合工具在这一类问题中的应用; 
+    此外, 像 \cite{Dickenstein2020} 这样的将看似不相干的两个领域 
+    (代数几何和生物学) 相交叉结合的内容对于诸多数学工作者都是相当有看头的. 
+
+    \item 推荐的另一个理由是里面有很多精美的插图, 我在答辩时就曾使用 \cite{Alper2025} 
+    中的一些图片. 
+  \end{itemize}
+  
+  \item \href{https://pubs.ams.org/BULL/}{\textbf{Bulletin of the American Mathematical Society}} 
+  \& \href{https://www.lms.ac.uk/publications/blms}{\textbf{Bulletin of the London Mathematical Society}}: 
+
+  \begin{itemize}[label = $ \circ $] % 这里使用了 enumitem 宏包中的功能, 可以自定义 item 的标志
+    比起 Notices Amer. Math. Soc. 这两本期刊的专业性更强, 
+    是经典的综述性学术期刊, 文章的篇幅更长, 内容更加详实, 有些文章都堪称
+    某一方向的入门手册. 
+    
+    下面我们以一些文章为代表来了解一下这两部期刊. 
+
+    \item 无理数和超越数 (即不是任何多项式的零点的复数) 的判别一直是一个复杂的问题, 
+      $ \pi $ 的无理性的第一次证明是 1761 年由 Lambert 用连分数给出的, 
+      2026 年丘成桐大学生数学竞赛分析与微分方程赛道第一题也有关于 $ \pi $ 
+      的无理性, 其中积分 $ I_{n} $ 的构造可以视作 Siegel 的构造的一种变形 
+      (参考知乎回答: \href{https://www.zhihu.com/question/2038923497062261595/answer/2040190430910862250}
+      {如何评价2026年丘成桐大学生数学竞赛? - 万物皆数数海拾贝的回答 - 知乎}), 
+      而 $ \pi $ 是无理数的最简单的一个证明是 Niven 在 \cite{Niven1947} 
+      里面给出的, 只需要简单的数学分析知识就足矣完成这个证明. 
+
+    \item Euler 常数 $ \gamma = \lim\limits_{n \to \infty} \left( \sum\limits_{i=1}^{n} \dfrac{1}{i} - \ln n \right) $ 
+      是数学分析的经典例子, 但关于它是否是超越数仍然是一个开放的问题, 
+      \cite{Lagarias2013} 展示了 $ \gamma $ 常数的历史与现代的研究进展, 
+      以及它是如何与许多数论问题相联系起来的. 
+
+    \item Hermite 矩阵是高等代数里常见的对象, 其对角线和特征值皆为实数. 
+      Schur-Horn 定理指出 Hermite 矩阵的对角元与特征值的某种关系, 这种关系可以被描述为
+      对角线向量位于所有特征值向量 (特征值的任意排列构成的向量) 的凸包之中. 
+      Atiyah \cite{Atiyah1982} 将这种凸性现象推广至辛流形和 K\"{a}hler 流形
+      上, 给出了 Schur-Horn 定理的几何表述. 
+
+    \item 上面谈论了数学分析和高等代数, 现在我们把高度稍微拔高, 来到抽象代数的领域. 
+      代数学有一个亘古不变的使命: 分析出一系列数学对象的代数结构, 并给出其分类, 
+      作为最基本的代数结构之一, 群的分类问题是代数学家一直关心的. 
+      根据 Jordan-H\"{o}lder 定理, 任意有限群都有合成群列并且唯一, 
+      其中有限单群作为合成群列的骨架, 其分类是有限群分类的根基. 
+      有限单群的分类定理的证明涉及约 100 位作者在 500 篇期刊文章中完成的超万页文献, 
+      最终于 2004 年通过补漏洞得以完善, 是上个世纪数学界的一项壮举. 
+      这一定理指出, 有限单群可以分类为素数阶循环群 $ \mathbb{Z} / p \mathbb{Z} $、
+      交错群 $ A_{n} $ ($ n\geq 5 $)、16 族 Lie 型单群以及 26 个散在单群. 
+      在这些散在单群中, 魔群是最为特殊的一个, 它的阶数达到了约 $ 8 \times 10^{53} $, 
+      其最小的忠实复表示的维数也达到了 196883. 
+      1978 年, McKay 察觉了这些庞大的数字背后的奥秘, 他在研究模函数的 $ j $-函数
+      的展开式时, 发现一次项系数为 196884, 并且这些系数都可以分解为魔群不可约表示的
+      维数的线性组合. McKay 将他的发现告诉 Conway, Conway 认为魔群与模形式之间的这种联系
+      是某种酒鬼胡话 (moonshine 的隐喻), 并在与 Norton 合作的文章 \cite{ConwayNorton1979} 
+      中将这一联系命名为月光猜想 (moonshine conjecture), 
+      这一文章的题目则叫做魔群月光 (Monstrous Moonshine), 
+      或许是最浪漫的数学术语, 更浪漫的是, 
+      Borcherds \cite{Borcherds1992} 在 1992 年使用弦论和顶点算子代数的技术证明了
+      月光猜想. 
+  \end{itemize}
+
+  \item \href{https://pubs.ams.org/ebooks/pspum}{\textbf{Proceedings of Symposia in Pure Mathematics}}: 
+  \begin{itemize}[label = $ \circ $]
+    \item \cite{Knapp1997}
+    \item \cite{Brion2017}
+    \item \cite{delaLlave2001}
+    \item \cite{Totaro1999}
+    \item \cite{Scholl1994}
+    \item \cite{DonagiWitten2015}
+  \end{itemize}
+  
+  
+
+  \item \href{https://www.sciencedirect.com/journal/expositiones-mathematicae}{\textbf{Expositiones Mathematicae}}: 
+  这是专门收录数学综述的期刊, 但诚如 \href{https://mathoverflow.net/questions/15366/which-journals-publish-expository-work/15369#15369}{
+  Timothy Chow 在这个评论下的回答}, 它最大的缺点就是知名度太低以至于很多
+  优秀的综述文章并未将其当作第一选择. \cite{Olsen&Holden2010}
+\end{itemize}
 
 \subsection{国内外研究现状}
 
@@ -477,7 +623,7 @@ Tikz 绘图虽然麻烦, 但是相对其他软件要美观很多, 这里推荐�
 % ===================== 参考文献 =====================
 \refstyle
 
-\bibliography{reference.bib}
+\bibliography{reference.bib} % 插入参考文献列表, 索引的文件位置是同一个文件夹下的 reference.bib 文件
 
 \newpage
 

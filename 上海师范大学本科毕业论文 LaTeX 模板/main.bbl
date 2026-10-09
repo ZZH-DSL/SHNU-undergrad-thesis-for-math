@@ -1,0 +1,147 @@
+\begin{thebibliography}{22}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{#1}
+\expandafter\ifx\csname urlstyle\endcsname\relax\else
+  \urlstyle{same}\fi
+\expandafter\ifx\csname href\endcsname\relax
+  \DeclareUrlCommand\doi{\urlstyle{rm}}
+  \def\eprint#1#2{#2}
+\else
+  \def\doi#1{\href{https://doi.org/#1}{\nolinkurl{#1}}}
+  \let\eprint\href
+\fi
+
+\bibitem[Xu(2022)]{Xu2022}
+XU C.
+\newblock {$K$}-stability: the recent interaction between algebraic geometry and complex geometry\allowbreak[J/OL].
+\newblock Notices Amer. Math. Soc., 2022, 69\allowbreak (7): 1126-1136.
+\newblock \url{https://doi.org/10.1090/noti2509}.
+
+\bibitem[Wang(2024)]{Wang2024}
+WANG Y.
+\newblock From the random geometry of conformally invariant systems to the {K}\"ahler geometry of universal {T}eichm\"uller space\allowbreak[J/OL].
+\newblock Notices Amer. Math. Soc., 2024, 71\allowbreak (6): 732-739.
+\newblock \url{https://doi.org/10.1090/noti2951}.
+
+\bibitem[Tao(2001)]{Tao2001}
+TAO T.
+\newblock From rotating needles to stability of waves: emerging connections between combinatorics, analysis, and {PDE}\allowbreak[J].
+\newblock Notices Amer. Math. Soc., 2001, 48\allowbreak (3): 294-303.
+
+\bibitem[Dickenstein(2020)]{Dickenstein2020}
+DICKENSTEIN A.
+\newblock Algebraic geometry tools in systems biology\allowbreak[J/OL].
+\newblock Notices Amer. Math. Soc., 2020, 67\allowbreak (11): 1706-1715.
+\newblock \url{https://doi.org/10.1090/noti}.
+
+\bibitem[Alper(2025)]{Alper2025}
+ALPER J.
+\newblock Evolution of stacks and moduli\allowbreak[J].
+\newblock Notices Amer. Math. Soc., 2025, 72\allowbreak (11): 1248-1261.
+
+\bibitem[Niven(1947)]{Niven1947}
+NIVEN I.
+\newblock A simple proof that {$\pi$} is irrational\allowbreak[J/OL].
+\newblock Bull. Amer. Math. Soc., 1947, 53: 509.
+\newblock \url{https://doi.org/10.1090/S0002-9904-1947-08821-2}.
+
+\bibitem[Lagarias(2013)]{Lagarias2013}
+LAGARIAS J~C.
+\newblock Euler's constant: {E}uler's work and modern developments\allowbreak[J/OL].
+\newblock Bull. Amer. Math. Soc. (N.S.), 2013, 50\allowbreak (4): 527-628.
+\newblock \url{https://doi.org/10.1090/S0273-0979-2013-01423-X}.
+
+\bibitem[Atiyah(1982)]{Atiyah1982}
+ATIYAH M~F.
+\newblock Convexity and commuting {H}amiltonians\allowbreak[J/OL].
+\newblock Bull. London Math. Soc., 1982, 14\allowbreak (1): 1-15.
+\newblock \url{https://doi.org/10.1112/blms/14.1.1}.
+
+\bibitem[Conway et~al.(1979)Conway and Norton]{ConwayNorton1979}
+CONWAY J~H, NORTON S~P.
+\newblock Monstrous moonshine\allowbreak[J/OL].
+\newblock Bull. London Math. Soc., 1979, 11\allowbreak (3): 308-339.
+\newblock \url{https://doi.org/10.1112/blms/11.3.308}.
+
+\bibitem[Borcherds(1992)]{Borcherds1992}
+BORCHERDS R~E.
+\newblock Monstrous moonshine and monstrous {L}ie superalgebras\allowbreak[J/OL].
+\newblock Invent. Math., 1992, 109\allowbreak (2): 405-444.
+\newblock \url{https://doi.org/10.1007/BF01232032}.
+
+\bibitem[Knapp(1997)]{Knapp1997}
+KNAPP A~W.
+\newblock Introduction to the {L}anglands program\allowbreak[M/OL]//\allowbreak
+Proc. Sympos. Pure Math.: Vol.~61\quad Representation theory and automorphic forms ({E}dinburgh, 1996).
+\newblock Amer. Math. Soc., Providence, RI, 1997: 245-302.
+\newblock \url{https://doi.org/10.1090/pspum/061/1476501}.
+
+\bibitem[Brion(2017)]{Brion2017}
+BRION M.
+\newblock Some structure theorems for algebraic groups\allowbreak[M/OL]//\allowbreak
+Proc. Sympos. Pure Math.: Vol.~94\quad Algebraic groups: structure and actions.
+\newblock Amer. Math. Soc., Providence, RI, 2017: 53-126.
+\newblock \url{https://doi.org/10.1090/pspum/094/04}.
+
+\bibitem[de~la Llave(2001)]{delaLlave2001}
+DE~LA LLAVE R.
+\newblock A tutorial on {KAM} theory\allowbreak[M/OL]//\allowbreak
+Proc. Sympos. Pure Math.: Vol.~69\quad Smooth ergodic theory and its applications ({S}eattle, {WA}, 1999).
+\newblock Amer. Math. Soc., Providence, RI, 2001: 175-292.
+\newblock \url{https://doi.org/10.1090/pspum/069/1858536}.
+
+\bibitem[Totaro(1999)]{Totaro1999}
+TOTARO B.
+\newblock The {C}how ring of a classifying space\allowbreak[M/OL]//\allowbreak
+Proc. Sympos. Pure Math.: Vol.~67\quad Algebraic {$K$}-theory ({S}eattle, {WA}, 1997).
+\newblock Amer. Math. Soc., Providence, RI, 1999: 249-281.
+\newblock \url{https://doi.org/10.1090/pspum/067/1743244}.
+
+\bibitem[Scholl(1994)]{Scholl1994}
+SCHOLL A~J.
+\newblock Classical motives\allowbreak[M/OL]//\allowbreak
+Proc. Sympos. Pure Math.: 55, Part 1\quad Motives ({S}eattle, {WA}, 1991).
+\newblock Amer. Math. Soc., Providence, RI, 1994: 163-187.
+\newblock \url{https://doi.org/10.1090/pspum/055.1/1265529}.
+
+\bibitem[Donagi et~al.(2015)Donagi and Witten]{DonagiWitten2015}
+DONAGI R, WITTEN E.
+\newblock Supermoduli space is not projected\allowbreak[M/OL]//\allowbreak
+Proc. Sympos. Pure Math.: Vol.~90\quad String-{M}ath 2012.
+\newblock Amer. Math. Soc., Providence, RI, 2015: 19-71.
+\newblock \url{https://doi.org/10.1090/pspum/090/01525}.
+
+\bibitem[Hanche-Olsen et~al.(2010)Hanche-Olsen and Holden]{Olsen&Holden2010}
+HANCHE-OLSEN H, HOLDEN H.
+\newblock The {K}olmogorov-{R}iesz compactness theorem\allowbreak[J/OL].
+\newblock Expo. Math., 2010, 28\allowbreak (4): 385-394.
+\newblock \url{https://doi.org/10.1016/j.exmath.2010.03.001}.
+
+\bibitem[Riemann(1857)]{Riemann1857}
+RIEMANN B.
+\newblock Theorie der {A}bel'schen {F}unctionen\allowbreak[J/OL].
+\newblock J. Reine Angew. Math., 1857, 54: 115-155.
+\newblock \url{https://doi.org/10.1515/crll.1857.54.115}.
+
+\bibitem[Nagata(1959)]{Nagata1959}
+NAGATA M.
+\newblock On the {$14$}-th problem of {H}ilbert\allowbreak[J/OL].
+\newblock Amer. J. Math., 1959, 81: 766-772.
+\newblock \url{https://doi.org/10.2307/2372927}.
+
+\bibitem[格罗滕迪克(2018)]{EGAChinese1}
+格罗滕迪克.
+\newblock 代数几何学原理. I, 概形语言\allowbreak[M].
+\newblock 北京: 高等教育出版社, 2018.
+
+\bibitem[黎景辉\ 等(2006)黎景辉, 陈志杰, and 赵春来]{Lai2006}
+黎景辉, 陈志杰, 赵春来.
+\newblock 代数群引论\allowbreak[M].
+\newblock 北京: 科学出版社, 2006.
+
+\bibitem[Milne(2008)]{milneAV}
+MILNE J~S.
+\newblock Abelian varieties (v2.00)\allowbreak[EB/OL].
+\newblock 2008: 166+vi.
+
+\end{thebibliography}
